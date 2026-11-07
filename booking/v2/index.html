@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ko"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>핏핏필라테스 수업 예약 (실습용)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--sand:#F6F1E8;--fit:#1F6F5C;--ink:#24302C;--mint:#7FD3B5;--muted:#5d6a65;--line:#e3dccd;--card:#fff;--off:#b9b3a6}
+*{box-sizing:border-box}
+body{margin:0;font-family:Pretendard,"Noto Sans KR","Apple SD Gothic Neo",sans-serif;background:var(--sand);color:var(--ink);font-size:20px;line-height:1.5}
+.band{background:var(--ink);color:#fff;text-align:center;font-size:16px;font-weight:600;padding:8px 16px}
+header{background:var(--fit);color:#fff;padding:22px 48px;display:flex;align-items:center;gap:16px}
+header .logo{font-size:30px;font-weight:800;letter-spacing:-.01em}
+header .sub{font-size:18px;opacity:.9}
+main{max-width:1240px;margin:40px auto;padding:0 32px}
+h1{font-size:40px;font-weight:800;margin:0 0 8px}
+.lead{color:var(--muted);margin:0 0 32px;font-size:20px}
+.steps{display:flex;gap:16px;margin-bottom:32px}
+.steps span{flex:1;padding:16px;text-align:center;border-radius:999px;background:#ebe4d6;color:var(--muted);font-weight:600;font-size:20px}
+.steps span.on{background:var(--fit);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+.card{background:var(--card);border-radius:16px;padding:32px;border:3px solid transparent;cursor:pointer;min-height:180px}
+.card:hover{border-color:var(--line)}.card.sel{border-color:var(--mint)}
+.card h3{margin:0 0 10px;font-size:30px;font-weight:800}.card p{margin:0;color:var(--muted);font-size:20px}
+.box{background:var(--card);border-radius:16px;padding:40px}
+.box h2{margin:0 0 24px;font-size:32px;font-weight:800}
+.slots{display:flex;flex-wrap:wrap;gap:16px}
+.slot{padding:18px 30px;border-radius:999px;background:#fff;border:3px solid var(--line);cursor:pointer;font-size:24px;font-weight:600;font-variant-numeric:tabular-nums}
+.slot.sel{border-color:var(--mint);background:#eefaf5}
+.slot.full{color:var(--off);border-style:dashed;cursor:not-allowed}
+.slot.full.wait{cursor:pointer;color:var(--muted)}
+.slot .tag{font-size:16px;margin-left:8px}
+.btn{display:inline-block;background:var(--fit);color:#fff;border:0;border-radius:999px;padding:18px 40px;font:700 22px Pretendard,"Noto Sans KR",sans-serif;cursor:pointer;margin-top:32px}
+.btn:disabled{background:var(--off);cursor:not-allowed}
+.btn.ghost{background:#fff;color:var(--fit);border:3px solid var(--fit)}
+.row{display:flex;gap:24px;margin:8px 0;font-size:24px}.row b{min-width:150px;color:var(--muted);font-weight:600}
+input{font:600 22px Pretendard,"Noto Sans KR",sans-serif;padding:10px 16px;border-radius:12px;border:2px solid var(--line);color:var(--ink);background:var(--sand)}
+.policy{margin-top:32px;padding:24px;border-radius:16px;background:var(--sand)}
+.policy strong{display:block;font-size:22px;margin-bottom:6px}
+.policy p{margin:0;font-size:22px}.policy small{display:block;margin-top:8px;color:var(--muted);font-size:17px}
+.no{font-size:28px;font-weight:800;color:var(--fit);font-variant-numeric:tabular-nums}
+.note{color:var(--muted);font-size:17px;margin-top:24px}
+.hide{display:none}
+@media (min-width:1600px){main{zoom:1.2;margin-top:24px}header{zoom:1.2}}
+@media (max-width:760px){header{padding:16px 20px}main{padding:0 16px;margin:24px auto}.grid{grid-template-columns:1fr}.steps span{font-size:15px;padding:10px}h1{font-size:30px}.row{flex-direction:column;gap:2px}}
+</style></head><body>
+<div class="band">실습용 페이지 · 실제 예약되지 않아요</div>
+<header><span class="logo">핏핏필라테스</span><span class="sub">수업 예약</span></header>
+<main>
+<h1 id="h">수업 예약</h1><p class="lead" id="lead">수업과 시간을 고르면 예약이 끝나요.</p>
+<div class="steps"><span id="s1" class="on">1. 수업 고르기</span><span id="s2">2. 시간 고르기</span><span id="s3">3. 예약 확인</span></div>
+
+<section id="p1"><div class="grid" id="classes"></div></section>
+
+<section id="p2" class="hide"><div class="box"><h2 id="cname"></h2><div class="slots" id="slots"></div>
+<p class="note" id="fullnote"></p>
+<button class="btn" id="next" disabled>다음</button> <button class="btn ghost" id="back">수업 다시 고르기</button></div></section>
+
+<section id="p3" class="hide"><div class="box"><h2>예약 내용을 확인해 주세요</h2>
+<div class="row"><b>수업</b><span id="c3"></span></div>
+<div class="row"><b>시간</b><span id="t3"></span></div>
+<div class="row"><b>예약자</b><label><input id="nm" value="체험회원" aria-label="예약자 이름(실습용 가명)"></label></div>
+<div class="policy"><strong>취소 규정</strong><p>수업 시작 4시간 전까지 무료 취소 · 이후 취소와 노쇼는 수강권 1회 차감</p><small>아프거나 급한 일은 센터로 전화 주세요(한 달 1회 사정 반영)</small></div>
+<button class="btn" id="confirm"></button></div></section>
+
+<section id="p4" class="hide"><div class="box"><h2 id="doneh">예약이 완료되었어요</h2>
+<p class="no" id="no"></p><p id="done" style="font-size:24px"></p>
+<button class="btn ghost" id="cancel">예약 취소하기</button>
+<p class="note">실습용 페이지라 실제로 예약되지 않고, 입력한 내용은 저장되지 않아요.</p></div></section>
+</main>
+<script>
+const V=2; // 1판 · 2판
+const C=[["그룹 매트","입문 · 최대 8명"],["그룹 기구","리포머 · 최대 6명"],["1:1 개인 레슨","강사와 둘이서"]];
+const S=["07:00","10:00","12:30","19:00","20:30"], FULL=2;
+let cs,ts,wait=false;
+const $=i=>document.getElementById(i);
+const step=n=>{["p1","p2","p3","p4"].forEach((p,i)=>$(p).classList.toggle("hide",i!==n-1));["s1","s2","s3"].forEach((s,i)=>$(s).classList.toggle("on",i<Math.min(n,3)))};
+$("confirm").textContent=V===2?"예약 확정하기":"예약하기";
+C.forEach(([n,d])=>{const e=document.createElement("div");e.className="card";e.tabIndex=0;e.innerHTML=`<h3>${n}</h3><p>${d}</p>`;
+ e.onclick=()=>{document.querySelectorAll(".card").forEach(x=>x.classList.remove("sel"));e.classList.add("sel");cs=n;pick()};$("classes").appendChild(e)});
+function pick(){ $("cname").textContent=cs+" · 내일"; $("slots").innerHTML=""; $("next").disabled=true; wait=false;
+ $("fullnote").textContent=V===2?"마감된 시간은 「대기 신청」을 누르면 취소가 생길 때 순서대로 알려 드려요.":"";
+ S.forEach((t,i)=>{const b=document.createElement("span");b.className="slot";b.tabIndex=0;
+  if(i===FULL){b.classList.add("full");b.innerHTML=t+'<span class="tag">마감</span>';
+   if(V===2){b.classList.add("wait");b.innerHTML=t+'<span class="tag">마감 · 대기 신청</span>';b.onclick=()=>sel(b,t,true)}}
+  else{b.textContent=t;b.onclick=()=>sel(b,t,false)}
+  $("slots").appendChild(b)}); step(2)}
+function sel(b,t,w){document.querySelectorAll(".slot").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");ts=t;wait=w;$("next").disabled=false}
+$("back").onclick=()=>step(1);
+$("next").onclick=()=>{$("c3").textContent=cs;$("t3").textContent="내일 "+ts+(wait?" (대기 신청)":"");
+ $("confirm").textContent=wait?"대기 신청하기":(V===2?"예약 확정하기":"예약하기");step(3)};
+$("confirm").onclick=()=>{const n="FF-"+Math.floor(1000+Math.random()*9000);
+ $("doneh").textContent=wait?"대기 신청이 접수되었어요":"예약이 완료되었어요";
+ $("no").textContent=(wait?"대기번호 ":"예약번호 ")+n; $("done").textContent=`${cs} · 내일 ${ts} · ${$("nm").value||"체험회원"}`;
+ $("cancel").textContent=wait?"대기 신청 취소하기":"예약 취소하기"; $("cancel").classList.remove("hide"); step(4)};
+$("cancel").onclick=()=>{$("doneh").textContent=wait?"대기 신청을 취소했어요":"예약을 취소했어요";
+ $("done").textContent=wait?"대기 순서에서 빠졌어요.":"수업 시작 4시간 전이라 수강권은 차감되지 않아요."; $("no").textContent=""; $("cancel").classList.add("hide")};
+</script></body></html>
